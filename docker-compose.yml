@@ -1,0 +1,8 @@
+version: '3'
+services:
+  data_query:
+    build: .
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
