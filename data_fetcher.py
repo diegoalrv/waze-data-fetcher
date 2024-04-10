@@ -41,16 +41,16 @@ class DataQuery:
             print(f"Error al guardar los datos: {e}")
 
 def main():
-    # endpoint_url = "https://www.waze.com/row-partnerhub-api/partners/15535091749/waze-feeds/c1313ab0-0f2d-440f-84e7-20b4275afb30?format=1"
     query = DataQuery()
-
+    minutes = os.getenv('minutes', 5)
+    minutes = int(minutes)
     while True:
         data = query.fetch_data()
 
         if data:
             query.save_data(data)
 
-        time.sleep(120)
+        time.sleep(minutes*60)
     pass
 
 if __name__ == "__main__":
