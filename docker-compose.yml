@@ -1,9 +1,30 @@
 version: '3'
 services:
-  data_query:
+  etl-waze:
     build: .
+    container_name: etl-waze
     restart: always
-    volumes:
-      - ./data:/app/data
+    # volumes:
+    #   - ./data:/app/data
     env_file:
       - .env
+    networks:
+      - clbb
+
+  redis-waze:
+    image: redis
+    container_name: redis-waze
+    ports:
+      - "6379:6379"
+    networks:
+      - clbb
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
+    driver: local
+
+networks:
+  clbb:
+    external: true

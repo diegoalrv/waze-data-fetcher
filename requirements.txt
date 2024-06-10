@@ -1,1 +1,7 @@
 requests
+geopandas
+pandas
+sqlalchemy
+psycopg2-binary
+geoalchemy2
+redis

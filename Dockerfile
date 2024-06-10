@@ -11,4 +11,4 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Ejecutamos el script cuando se inicie el contenedor
-CMD ["python", "data_fetcher.py"]
+CMD ["python", "etl.py"]
