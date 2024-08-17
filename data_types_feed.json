@@ -1,0 +1,229 @@
+{
+    "alerts": {
+      "pubMillis": {
+        "type": "Timestamp",
+        "description": "Publication date (Unix time – milliseconds since epoch)"
+      },
+      "location": {
+        "type": "Coordinates",
+        "description": "Location per report (X Y - Long-lat)"
+      },
+      "uuid": {
+        "type": "String",
+        "description": "Unique system ID"
+      },
+      "magvar": {
+        "type": "Integer",
+        "description": "Event direction (Driver heading at report time. 0 degrees at North, according to the driver’s device)"
+      },
+      "type": {
+        "type": "String",
+        "description": "Event type (see alert type table)"
+      },
+      "subtype": {
+        "type": "String",
+        "description": "Event sub type (depends on atof parameter, see alert subtypes table)"
+      },
+      "reportDescription": {
+        "type": "String",
+        "description": "Report description (supplied when available)"
+      },
+      "street": {
+        "type": "String",
+        "description": "Street name (as is written in database, no canonical form, may be null)"
+      },
+      "city": {
+        "type": "String",
+        "description": "City and state name [City, State] if available, [State] if not associated with a city"
+      },
+      "country": {
+        "type": "String",
+        "description": "(see two-letter codes in ISO 3166-1)"
+      },
+      "roadType": {
+        "type": "Integer",
+        "description": "Road type (see road types)"
+      },
+      "reportRating": {
+        "type": "Integer",
+        "description": "User rank between 1-6 (6 = high ranked user)"
+      },
+      "jamUuid": {
+        "type": "String",
+        "description": "If the alert is connected to a jam - jam ID"
+      },
+      "reliability": {
+        "type": "Integer",
+        "description": "Reliability score based on user reactions and reporter level (0-10)"
+      },
+      "confidence": {
+        "type": "Integer",
+        "description": "Confidence score based on user reactions (0-10)"
+      },
+      "reportByMunicipalityUser": {
+        "type": "Boolean",
+        "description": "Alert reported by municipality user (partner) Optional"
+      },
+      "nThumbsUp": {
+        "type": "Integer",
+        "description": "Number of thumbs up received"
+      }
+    },
+    "traffic": {
+      "pubMillis": {
+        "type": "Timestamp",
+        "description": "Publication date (Unix time – milliseconds since epoch)"
+      },
+      "type": {
+        "type": "String",
+        "description": "TRAFFIC_JAM"
+      },
+      "line": {
+        "type": "List",
+        "description": "Traffic jam line string (List of Longitude and Latitude coordinates, supplied when available)"
+      },
+      "speed": {
+        "type": "Float",
+        "description": "Current average speed on jammed segments in meters/seconds"
+      },
+      "speedKPH": {
+        "type": "Float",
+        "description": "Current average speed on jammed segments in Km/h"
+      },
+      "length": {
+        "type": "Integer",
+        "description": "Jam length in meters"
+      },
+      "delay": {
+        "type": "Integer",
+        "description": "Delay of jam compared to free flow speed, in seconds (in case of block, -1)"
+      },
+      "street": {
+        "type": "String",
+        "description": "Street name (as is written in database, no canonical form, supplied when available)"
+      },
+      "city": {
+        "type": "String",
+        "description": "City and state name [City, State] if available, [State] if not associated with a city"
+      },
+      "country": {
+        "type": "String",
+        "description": "Available on EU (world) server (see two-letter codes in ISO 3166-1)"
+      },
+      "roadType": {
+        "type": "Integer",
+        "description": "Road type (see road types)"
+      },
+      "startNode": {
+        "type": "String",
+        "description": "Nearest Junction/street/city to jam start (supplied when available)"
+      },
+      "endNode": {
+        "type": "String",
+        "description": "Nearest Junction/street/city to jam end (supplied when available)"
+      },
+      "level": {
+        "type": "Integer",
+        "description": "Traffic congestion level (0 = free flow, 5 = blocked)"
+      },
+      "uuid": {
+        "type": "Long Integer",
+        "description": "Unique jam ID"
+      },
+      "turnLine": {
+        "type": "Coordinates",
+        "description": "A set of coordinates of a turn - only when the jam is in a turn (supplied when available)"
+      },
+      "turnType": {
+        "type": "String",
+        "description": "What kind of turn is it - left, right, exit R or L, continue straight or NONE (supplied when available)"
+      },
+      "blockingAlertUuid": {
+        "type": "String",
+        "description": "If the jam is connected to a block (see alerts)"
+      }
+    },
+    "irregularities": {
+      "id": {
+        "type": "Long Integer",
+        "description": "Irregularity Identifier"
+      },
+      "detectionDate": {
+        "type": "Date Timestamp",
+        "description": "Date of irregularity"
+      },
+      "detectionDateMillis": {
+        "type": "Unix Date in Milliseconds",
+        "description": "Date of irregularity"
+      },
+      "updateDate": {
+        "type": "Date Timestamp",
+        "description": "Last update"
+      },
+      "updateDateMillis": {
+        "type": "Unix Date in Milliseconds",
+        "description": "Last update"
+      },
+      "line": {
+        "type": "List",
+        "description": "Traffic jam line string (List of Longitude and Latitude coordinates, supplied when available)"
+      },
+      "type": {
+        "type": "String",
+        "description": "Irregularity type - NONE(0, 'NONE'), SMALL(1, 'Small'), MEDIUM(2, 'Medium'), LARGE(3, 'Large'), HUGE(4, 'Huge')"
+      },
+      "speed": {
+        "type": "Float",
+        "description": "Traffic speed in irregularity"
+      },
+      "regularSpeed": {
+        "type": "Float",
+        "description": "Historical regular speed in segment"
+      },
+      "delaySeconds": {
+        "type": "Number",
+        "description": "Delay in seconds from regular speed"
+      },
+      "seconds": {
+        "type": "Number",
+        "description": "Current traffic speed"
+      },
+      "length": {
+        "type": "Number",
+        "description": "Irregularity length"
+      },
+      "trend": {
+        "type": "Number",
+        "description": "-1 improving, 0 constant, 1 getting worse"
+      },
+      "street": {
+        "type": "String",
+        "description": "Street name"
+      },
+      "city": {
+        "type": "String",
+        "description": "City name"
+      },
+      "country": {
+        "type": "String",
+        "description": "Country name"
+      },
+      "severity": {
+        "type": "Float",
+        "description": "Calculated severity of irregularity 0-5 (5 = most severe)"
+      },
+      "jamLevel": {
+        "type": "Number",
+        "description": "1-4, 4 being worst jam level"
+      },
+      "driversCount": {
+        "type": "Number",
+        "description": "Number of Wazers in irregularity"
+      },
+      "alertsCount": {
+        "type": "Number",
+        "description": "How many alerts from Wazers in irregularity segments"
+      }
+    }
+  }
+  

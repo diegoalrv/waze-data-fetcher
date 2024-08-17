@@ -1,0 +1,56 @@
+category,element,type,description
+alerts,pubMillis,datetime64[ns],Publication date (Unix time â€“ milliseconds since epoch)
+alerts,location,object,Location per report (X Y - Long-lat)
+alerts,uuid,str,Unique system ID
+alerts,magvar,int64,"Event direction (Driver heading at report time. 0 degrees at North, according to the driverâ€™s device)"
+alerts,type,str,Event type (see alert type table)
+alerts,subtype,str,"Event sub type (depends on atof parameter, see alert subtypes table)"
+alerts,reportDescription,str,Report description (supplied when available)
+alerts,street,str,"Street name (as is written in database, no canonical form, may be null)"
+alerts,city,str,"City and state name [City, State] if available, [State] if not associated with a city"
+alerts,country,str,(see two-letter codes in ISO 3166-1)
+alerts,roadType,int64,Road type (see road types)
+alerts,reportRating,int64,User rank between 1-6 (6 = high ranked user)
+alerts,jamUuid,str,If the alert is connected to a jam - jam ID
+alerts,reliability,int64,Reliability score based on user reactions and reporter level (0-10)
+alerts,confidence,int64,Confidence score based on user reactions (0-10)
+alerts,reportByMunicipalityUser,bool,Alert reported by municipality user (partner) Optional
+alerts,nThumbsUp,int64,Number of thumbs up received
+traffic,pubMillis,datetime64[ns],Publication date (Unix time â€“ milliseconds since epoch)
+traffic,type,str,TRAFFIC_JAM
+traffic,line,object,"Traffic jam line string (List of Longitude and Latitude coordinates, supplied when available)"
+traffic,speed,float64,Current average speed on jammed segments in meters/seconds
+traffic,speedKPH,float64,Current average speed on jammed segments in Km/h
+traffic,length,int64,Jam length in meters
+traffic,delay,int64,"Delay of jam compared to free flow speed, in seconds (in case of block, -1)"
+traffic,street,str,"Street name (as is written in database, no canonical form, supplied when available)"
+traffic,city,str,"City and state name [City, State] if available, [State] if not associated with a city"
+traffic,country,str,Available on EU (world) server (see two-letter codes in ISO 3166-1)
+traffic,roadType,int64,Road type (see road types)
+traffic,startNode,str,Nearest Junction/street/city to jam start (supplied when available)
+traffic,endNode,str,Nearest Junction/street/city to jam end (supplied when available)
+traffic,level,int64,"Traffic congestion level (0 = free flow, 5 = blocked)"
+traffic,uuid,int64,Unique jam ID
+traffic,turnLine,object,A set of coordinates of a turn - only when the jam is in a turn (supplied when available)
+traffic,turnType,str,"What kind of turn is it - left, right, exit R or L, continue straight or NONE (supplied when available)"
+traffic,blockingAlertUuid,str,If the jam is connected to a block (see alerts)
+irregularities,id,int64,Irregularity Identifier
+irregularities,detectionDate,datetime64[ns],Date of irregularity
+irregularities,detectionDateMillis,int64,Date of irregularity
+irregularities,updateDate,datetime64[ns],Last update
+irregularities,updateDateMillis,int64,Last update
+irregularities,line,object,"Traffic jam line string (List of Longitude and Latitude coordinates, supplied when available)"
+irregularities,type,str,"Irregularity type - NONE(0, 'NONE'), SMALL(1, 'Small'), MEDIUM(2, 'Medium'), LARGE(3, 'Large'), HUGE(4, 'Huge')"
+irregularities,speed,float64,Traffic speed in irregularity
+irregularities,regularSpeed,float64,Historical regular speed in segment
+irregularities,delaySeconds,float64,Delay in seconds from regular speed
+irregularities,seconds,float64,Current traffic speed
+irregularities,length,float64,Irregularity length
+irregularities,trend,float64,"-1 improving, 0 constant, 1 getting worse"
+irregularities,street,str,Street name
+irregularities,city,str,City name
+irregularities,country,str,Country name
+irregularities,severity,float64,Calculated severity of irregularity 0-5 (5 = most severe)
+irregularities,jamLevel,float64,"1-4, 4 being worst jam level"
+irregularities,driversCount,float64,Number of Wazers in irregularity
+irregularities,alertsCount,float64,How many alerts from Wazers in irregularity segments

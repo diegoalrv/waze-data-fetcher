@@ -9,57 +9,42 @@ from sqlalchemy import create_engine
 import redis
 import warnings
 
+from glob import glob
+
 # Ignorar todas las advertencias
 warnings.filterwarnings("ignore")
 
-class DataExtractor:
-    def __init__(self, endpoint_url=None, save_folder='/app/data'):
-        self.endpoint_url = endpoint_url or os.getenv("ENDPOINT_URL")
-        self.save_folder = save_folder
-        self.filename = ''
+class DataReader:
+    def __init__(self):
+        self.timestamp = None
+        self.data = None
 
-    def create_save_folder(self):
-        if not os.path.exists(self.save_folder):
-            try:
-                os.makedirs(self.save_folder)
-                print(f"Carpeta de guardado '{self.save_folder}' creada exitosamente.")
-            except OSError as e:
-                print(f"No se pudo crear la carpeta de guardado: {e}")
+    def read_file(self, filename):
+        if not os.path.exists(filename):
+            raise FileNotFoundError(f"File '{filename}' not found in folder '{self.folder_path}'")
 
-    def fetch_data(self):
+        timestamp_str = os.path.split(filename)[-1]  # Remove file extension
+        self.timestamp_str = timestamp_str.replace('.json', '')
         try:
-            response = requests.get(self.endpoint_url)
-            response.raise_for_status()
-            self.data = response.json()
-        except requests.exceptions.RequestException as e:
-            print(f"Error al obtener los datos: {e}")
-            self.data = False
-        pass
-        
-    def set_current_timestamp(self):
-        self.timestamp = datetime.now()
-        self.timestamp_str = self.timestamp.strftime("%Y%m%d_%H%M%S")
-        pass
+            self.timestamp = pd.to_datetime(self.timestamp_str, format='%Y%m%d_%H%M%S')
+        except ValueError:
+            raise ValueError("Invalid timestamp format in filename")
 
-    def set_filename(self):
-        self.filename = f"{self.save_folder}/{self.timestamp_str}.json"
-        pass
-    
-    def save_data(self):
-        self.create_save_folder()  # Crear la carpeta de guardado al inicializar la instancia
-        try:
-            with open(self.filename, 'w') as f:
-                json.dump(self.data, f, indent=4)
-            print(f"Datos guardados correctamente en '{self.filename}'")
-        except IOError as e:
-            print(f"Error al guardar los datos: {e}")
-    
-    def connect_to_redis(self, host='redis-waze', port=6379, db=0):
+        # Read JSON data from file
+        with open(filename, 'r') as file:
+            self.data = json.load(file)
+
+    def connect_to_redis(self, host='localhost', port=6379, db=0):
         try:
             self.redis_client = redis.StrictRedis(host=host, port=port, db=db)
             print("Conexión a Redis establecida.")
         except redis.ConnectionError as e:
             print(f"No se pudo conectar a Redis: {e}")
+
+    def get_data_uploaded(self):
+        keys = self.redis_client.keys("*")
+        keys = [byte.decode('utf-8') for byte in keys]
+        return keys
 
     def save_data_to_redis(self):
         if self.redis_client:
@@ -145,11 +130,11 @@ class DataLoader:
         pass
 
     def connect_to_database(self):
-        user = os.getenv('DB_USER', None)
-        password = os.getenv('DB_PASSWORD', None)
-        host = os.getenv('DB_HOST', None)
-        port = os.getenv('DB_PORT', None)
-        db = os.getenv('DB_NAME', None)
+        user = 'clbb'
+        password = 'pass123'
+        host = 'localhost'
+        port = '5432'
+        db = 'geodb'
         self.engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
         pass
 
@@ -163,35 +148,37 @@ class DataLoader:
         pass
 
 def main():
-    extractor = DataExtractor()
+    reader = DataReader()
     transformer = DataTransformer()
     loader = DataLoader()
 
-    extractor.connect_to_redis()
+    reader.connect_to_redis()
+    json_files = glob('./data/*.json')
+    uploaded_files = reader.get_data_uploaded()
 
-    minutes = os.getenv('minutes', 5)
-    minutes = int(minutes)
-    print("Captura de Json Waze")
+    # Filtrar archivos que no están en la lista de archivos subidos
+    remaining_data = [archivo for archivo in json_files if archivo not in uploaded_files]
 
-    while True:
-        extractor.set_current_timestamp()
-        extractor.set_filename()
-        extractor.fetch_data()
+    total = len(json_files)
 
-        if extractor.data:
-            extractor.save_data_to_redis()
-
-            transformer.set_data(extractor.data)
-            transformer.set_timestamp(extractor.timestamp)
+    for i, file in enumerate(remaining_data):
+        print(file)
+        print(f'{i}/{total}')
+        print('reading_files')
+        reader.read_file(file)
+        print('guardando en redis')
+        reader.save_data_to_redis()
+        try:
+            transformer.set_data(reader.data)
+            transformer.set_timestamp(reader.timestamp)
             transformer.transform_json_data()
 
             loader.set_data(transformer.gdfs)
             loader.connect_to_database()
             loader.load_to_database()
             loader.disconnect_from_database()
-        
-        print(extractor.timestamp_str)
-        time.sleep(minutes*60)
-
+        except Exception as e:
+            print("Se ha producido un error:", e)
+            
 if __name__ == "__main__":
     main()

@@ -1,25 +1,27 @@
 version: '3'
 services:
-  etl-waze:
-    build: .
-    container_name: etl-waze
-    restart: always
-    # volumes:
-    #   - ./data:/app/data
-    env_file:
-      - .env
-    networks:
-      - clbb
 
   redis-waze:
     image: redis
     container_name: redis-waze
+    restart: always
     ports:
       - "6379:6379"
     networks:
       - clbb
     volumes:
       - redis_data:/data
+
+  etl-waze:
+    build: .
+    container_name: etl-waze
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - clbb
+    depends_on:
+      - redis-waze
 
 volumes:
   redis_data:
